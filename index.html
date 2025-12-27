@@ -188,7 +188,9 @@
 </head>
 <body>
 
-<audio id="bg-music" loop><source src="https://files.catbox.moe/gqsh6n.mp3" type="audio/mpeg"></audio>
+<audio id="bg-music" loop preload="auto">
+    <source src="https://files.catbox.moe/gqsh6n.mp3" type="audio/mpeg">
+</audio>
 <canvas id="canvas-fw"></canvas>
 <div id="embers-layer"></div>
 
@@ -376,17 +378,27 @@
     }
     updateCovers();
 
-    function openEnvelope() {
-        document.getElementById('env-wrap').classList.add('open-env');
-        document.getElementById('bg-music').play().catch(() => {});
-        setTimeout(() => document.getElementById('env-wrap').classList.add('open-env-final'), 800);
-        setTimeout(() => {
-            document.getElementById('envelope-stage').style.display = 'none';
-            document.getElementById('wrapped-stage').style.display = 'block';
-            document.getElementById('prog-container').style.display = 'flex';
-            updateProgress(1);
-        }, 1600);
-    }
+function openEnvelope() {
+    const music = document.getElementById('bg-music');
+    
+    // Force play immediately on the click event
+    music.play().then(() => {
+        console.log("Playback started successfully");
+    }).catch((error) => {
+        console.log("Playback failed:", error);
+        // Fallback: Try playing again if the first attempt failed
+        window.addEventListener('click', () => { music.play(); }, { once: true });
+    });
+
+    document.getElementById('env-wrap').classList.add('open-env');
+    setTimeout(() => document.getElementById('env-wrap').classList.add('open-env-final'), 800);
+    setTimeout(() => {
+        document.getElementById('envelope-stage').style.display = 'none';
+        document.getElementById('wrapped-stage').style.display = 'block';
+        document.getElementById('prog-container').style.display = 'flex';
+        updateProgress(1);
+    }, 1600);
+}
 function nextSlide(n) {
     const current = document.getElementById(`s${n}`);
     const next = document.getElementById(`s${n+1}`);
