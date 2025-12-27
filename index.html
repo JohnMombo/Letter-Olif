@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For | 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --silver: #bec2cb;
+            --rose: #b76e79;
+            --wood: #3d2b1f;
+            --black: #1a1a1a;
+            --mat: #f4f1ea;
+            --spotify-green: #1DB954; 
+            --deep-obsidian: rgba(5, 5, 10, 0.98);
+            --paper: #fdfaf0;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { display: none; }
+        
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; background: #000;
+            font-family: 'Montserrat', sans-serif; color: white;
+            position: fixed; 
+        }
+
+        #canvas-fw { position: fixed; top: 0; left: 0; z-index: 40; pointer-events: none; }
+        #embers-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none; }
+        
+        .ember { 
+            position: absolute; 
+            background: radial-gradient(circle, #fff 0%, var(--gold) 20%, transparent 100%); 
+            border-radius: 50%; opacity: 0.6; 
+            animation: drift var(--duration) linear infinite; 
+            width: 5px; height: 5px;
+        }
+
+        @keyframes drift {
+            0% { transform: translateY(105vh) translateX(0); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) translateX(60px); opacity: 0; }
+        }
+/* This ensures the background is visible immediately */
+#s1.active {
+    display: flex;
+}
+
+/* Only the content inside slides up, and only on the first run */
+#s1.first-run .paper-card, 
+#s1.first-run .album-stack, 
+#s1.first-run .sticker, 
+#s1.first-run .nav-footer {
+    animation: s1ContentRise 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes s1ContentRise {
+    from { 
+        transform: translateY(100vh); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0); 
+        opacity: 1; 
+    }
+}
+        #intro-stage, #envelope-stage {
+            position: absolute; width: 100%; height: 100%; 
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+            z-index: 100; transition: opacity 1s; background: #000;
+        }
+
+        .envelope-wrapper { position: relative; cursor: pointer; perspective: 1000px; transition: all 1s ease-in-out; }
+        .envelope { width: 280px; height: 180px; background: #112240; position: relative; border-radius: 4px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform-style: preserve-3d; }
+        .top-flap { 
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 140px solid transparent; border-right: 140px solid transparent; 
+            border-top: 100px solid #1b263b; transform-origin: top; transition: transform 0.6s ease; z-index: 10;
+        }
+        .wax-seal { position: absolute; top: 75px; left: 115px; width: 50px; height: 50px; background: #8b0000; border-radius: 50%; border: 2px solid #5a0000; z-index: 11; transition: opacity 0.4s; }
+        
+        .open-env .top-flap { transform: rotateX(180deg); }
+        .open-env .wax-seal { opacity: 0; }
+        .open-env-final { transform: translateY(100vh) scale(0.5); opacity: 0; }
+
+        #wrapped-stage { display: none; width: 100%; height: 100%; z-index: 30; }
+.slide { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    display: flex; /* Always flex, but hidden via visibility */
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px;
+    
+    /* Animation settings */
+    opacity: 0; 
+    visibility: hidden;
+    transform: scale(1.1); /* Start slightly zoomed in */
+    transition: opacity 0.5s ease, transform 0.9s cubic-bezier(0.2, 1, 0.3, 1), visibility 0.5s;
+    z-index: 50;
+    background: transparent !important;
+}
+
+.slide.active { 
+    opacity: 1; 
+    visibility: visible;
+    transform: scale(1); /* Settle to normal size */
+}
+
+        .slide:nth-child(odd) { background: radial-gradient(circle at center, #1a2a44 0%, #000 100%); }
+        .slide:nth-child(even) { background: radial-gradient(circle at center, #2d1b33 0%, #000 100%); }
+
+        .sticker {
+            position: absolute;
+            width: clamp(90px, 16vw, 150px);
+            pointer-events: none;
+            z-index: 45;
+            opacity: 0.8;
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.1));
+        }
+
+        .paper-card {
+            background: var(--paper);
+            background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+            padding: clamp(25px, 5vw, 45px); 
+            border-radius: 2px; width: 90%; max-width: 650px; text-align: center;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.7);
+            position: relative; z-index: 50; 
+            max-height: 60vh; overflow-y: auto;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .paper-card p { 
+            font-family: 'Montserrat', sans-serif; 
+            font-size: clamp(0.9rem, 2.5vw, 1.05rem); 
+            line-height: 1.7; color: #222; margin: 0; font-weight: 500;
+        }
+
+        .album-stack { position: absolute; cursor: pointer; z-index: 60; transition: transform 0.4s; }
+        
+        /* Updated frame sizing to be responsive */
+        .vert { width: 22vmin; height: 30vmin; max-width: 200px; max-height: 280px; min-width: 90px; min-height: 120px; } 
+        .horiz { width: 30vmin; height: 22vmin; max-width: 280px; max-height: 200px; min-width: 120px; min-height: 90px; } 
+        
+        .pos-tl { top: 6%; left: 4%; transform: rotate(-6deg); } 
+        .pos-tr { top: 6%; right: 4%; transform: rotate(4deg); } 
+        .pos-bl { bottom: 12%; left: 4%; transform: rotate(5deg); }
+        .pos-br { bottom: 12%; right: 4%; transform: rotate(-5deg); }
+
+        .frame-body { width: 100%; height: 100%; padding: clamp(4px, 1vw, 8px); box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
+        .mat { width: 100%; height: 100%; background: var(--mat); padding: 5px; }
+        .photo { width: 100%; height: 100%; background-size: cover; background-position: center; transition: 0.3s; }
+
+        .f-gold { background: linear-gradient(145deg, #d4af37, #8a6d3b); }
+        .f-silver { background: linear-gradient(145deg, #bec2cb, #7d7f84); }
+        .f-rose { background: linear-gradient(145deg, #b76e79, #8c4e58); }
+        .f-wood { background: linear-gradient(145deg, #3d2b1f, #1a120b); }
+
+        .nav-footer { position: fixed; bottom: 25px; width: 100%; display: flex; justify-content: center; gap: 12px; z-index: 100; }
+        .btn { border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; font-family: 'Montserrat'; letter-spacing: 1px; transition: 0.3s; font-size: 0.85rem; }
+        .btn-next { background: var(--spotify-green); color: white; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3); }
+        .btn-back { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+        .progress-container { position: fixed; top: 15px; left: 0; width: 100%; display: flex; gap: 4px; padding: 0 10px; z-index: 1000; }
+        .progress-bar { height: 3px; background: rgba(255,255,255,0.15); flex: 1; border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #fff; width: 0%; transition: width 0.4s; }
+
+        #photo-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--deep-obsidian); z-index: 2000; align-items: center; justify-content: center;
+        }
+        .gallery-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; touch-action: none; }
+        .side-pic { width: 15vw; height: auto; max-height: 40vh; border: 1px solid rgba(255,255,255,0.2); opacity: 0.2; object-fit: cover; cursor: pointer; border-radius: 4px; margin: 0 30px; }
+        .main-media { width: clamp(280px, 65%, 850px); max-height: 80vh; border: 5px solid #fff; object-fit: contain; background: #000; z-index: 2005; box-shadow: 0 0 50px rgba(0,0,0,1); }
+        .close-btn { position: absolute; top: 30px; right: 30px; font-size: 2.5rem; color: #fff; cursor: pointer; z-index: 3000; }
+
+        @media (max-width: 768px) {
+            .side-pic { display: none; }
+            .main-media { width: 92%; }
+            .album-stack { transform: scale(0.9); }
+        }
+    </style>
+</head>
+<body>
+
+<audio id="bg-music" loop><source src="https://files.catbox.moe/gqsh6n.mp3" type="audio/mpeg"></audio>
+<canvas id="canvas-fw"></canvas>
+<div id="embers-layer"></div>
+
+<div class="progress-container" id="prog-container" style="display:none;">
+    <script>for(let i=1; i<=10; i++) document.write(`<div class="progress-bar"><div class="progress-fill" id="fill-${i}"></div></div>`);</script>
+</div>
+
+<div id="intro-stage">
+    <h1 style="font-family: 'Playfair Display'; font-size: clamp(2.5rem, 8vw, 4rem); text-align: center; margin: 0;">Happy<br>New Year.</h1>
+    <p style="letter-spacing: 12px; opacity: 0.5; margin-top: 15px;">2025</p>
+</div>
+
+<div id="envelope-stage" style="display:none; opacity:0;">
+    <div class="envelope-wrapper" id="env-wrap" onclick="openEnvelope()">
+        <div class="envelope"><div class="top-flap"></div><div class="wax-seal"></div></div>
+    </div>
+    <p id="tap-text" style="margin-top: 45px; letter-spacing: 4px; font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.6);">TAP TO OPEN LETTER</p>
+</div>
+
+
+
+<div id="wrapped-stage">
+    <div class="slide active first-run" id="s1">
+        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnQ0bzhyN2JvYXhmY3NmOHFkZGVwdHN2YmV4cWcxcnZiY2pjaWZ1cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9J8L7rMT4VHNcOOQQG/giphy.gif" class="sticker pos-tl">
+        <div class="album-stack pos-tr vert" onclick="openGallery('s1_tr')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s1_tr"></div></div></div></div>
+        <div class="paper-card"><p>Hi Keira,<br><br>Happy New Year po! I truly hope this year has started gently for you and that you’ve been doing well. I hope you were able to rest, relax, and really enjoy your vacation po. I’ve been thinking about you a lot, and I just wanted to check in through this letter, not to demand anything, but simply to speak honestly with this letter.</p></div>
+        <div class="album-stack pos-bl horiz" onclick="openGallery('s1_bl')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s1_bl"></div></div></div></div>
+        <div class="album-stack pos-br vert" onclick="openGallery('s1_br')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s1_br"></div></div></div></div>
+        <div class="nav-footer"><button class="btn btn-next" onclick="nextSlide(1)">CONTINUE</button></div>
+    </div>
+
+    <div class="slide" id="s2">
+        <div class="album-stack pos-tl horiz" onclick="openGallery('s2_tl')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s2_tl"></div></div></div></div>
+        <div class="album-stack pos-tr vert" onclick="openGallery('s2_tr')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s2_tr"></div></div></div></div>
+        <div class="paper-card"><p>I want to tell you that I haven’t moved on from us. I don’t think I’m trying to either. What we had mattered to me deeply, and it still does. I also want to be honest and say that I miss you so much sobra. I miss the conversations, your presence, and the small moments we used to share, and even now, mahal parin kita ng sobrang-sobra. But at the same time, I understand why we needed to step back. I see now that there were things we both needed to face and grow through on our own.</p></div>
+        <div class="album-stack pos-bl vert" onclick="openGallery('s2_bl')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s2_bl"></div></div></div></div>
+        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnhudHRja3NvbHR5cTgwcGhleGxjNHR4YnVobzVyYTAzbHIydGR2MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/IYFjaRidMtNnYNIV3t/giphy.gif" class="sticker pos-br">
+        <div class="nav-footer"><button class="btn btn-back" onclick="prevSlide(2)">BACK</button><button class="btn btn-next" onclick="nextSlide(2)">NEXT</button></div>
+    </div>
+
+    <div class="slide" id="s3">
+        <div class="album-stack pos-tl vert" onclick="openGallery('s3_tl')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s3_tl"></div></div></div></div>
+        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8zMjFhcjYxazFqMW0zYXhteXptdjV1dXVjbjV2b2kyb29sNDZlNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/8FryAist7dyO6qAKMM/giphy.gif" class="sticker pos-tr">
+        <div class="paper-card"><p>Over the past weeks, I’ve been reflecting a lot about myself, my actions, my shortcomings, and the ways I can become a better person for myself. I’m learning that growth isn’t about rushing back to what we lost, but about becoming someone healthier, steadier, and more emotionally grounded. That’s something I want to commit to right now, even if it takes time.</p></div>
+        <div class="album-stack pos-bl horiz" onclick="openGallery('s3_bl')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s3_bl"></div></div></div></div>
+        <div class="album-stack pos-br vert" onclick="openGallery('s3_br')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s3_br"></div></div></div></div>
+        <div class="nav-footer"><button class="btn btn-back" onclick="prevSlide(3)">BACK</button><button class="btn btn-next" onclick="nextSlide(3)">NEXT</button></div>
+    </div>
+
+    <div class="slide" id="s4">
+        <div class="album-stack pos-tl horiz" onclick="openGallery('s4_tl')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s4_tl"></div></div></div></div>
+        <div class="album-stack pos-tr vert" onclick="openGallery('s4_tr')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s4_tr"></div></div></div></div>
+        <div class="paper-card"><p>I don’t want to pressure you or make you feel like you owe me anything po. This letter isn’t meant to pull you back before you’re ready, or if you ever decide you’re not. I respect your space, your healing, and your journey. I also want to say that I’m genuinely grateful that, even after everything, we’re still able to be friends parin. That means a lot to me and I truly value having you in my life in any form.</p></div>
+        <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTV5bG5tdGp0Mmh4emM4ZXp5aHN5Z3FoYXMxZXd5M3A5bWEyZmFmciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/KH3EFVAvUtbxgAWpMj/giphy.gif" class="sticker pos-bl">
+        <div class="album-stack pos-br horiz" onclick="openGallery('s4_br')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s4_br"></div></div></div></div>
+        <div class="nav-footer"><button class="btn btn-back" onclick="prevSlide(4)">BACK</button><button class="btn btn-next" onclick="nextSlide(4)">NEXT</button></div>
+    </div>
+
+    <div class="slide" id="s5">
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjk4cXRlaGJmMW92NXMxdjlpNzA3MXRjbWtzaHNkMHNuc3JndW1qYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/gCxd0kUSR6I9dflWgm/giphy.gif" class="sticker pos-tl">
+        <div class="album-stack pos-tr horiz" onclick="openGallery('s5_tr')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s5_tr"></div></div></div></div>
+        <div class="paper-card"><p>I also want to say this, regardless of where life takes us, I hope you keep choosing to be happy. I hope you continue doing the things that bring you peace, growth, and light. You deserve a life that feels calm, fulfilling, and true to who you are, and I hope this year gives you reasons to smile and believe in yourself even more.</p></div>
+        <div class="album-stack pos-bl horiz" onclick="openGallery('s5_bl')"><div class="frame-body f-wood"><div class="mat"><div class="photo" id="cover-s5_bl"></div></div></div></div>
+        <div class="album-stack pos-br vert" onclick="openGallery('s5_br')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s5_br"></div></div></div></div>
+        <div class="nav-footer"><button class="btn btn-back" onclick="prevSlide(5)">BACK</button><button class="btn btn-next" onclick="nextSlide(5)">NEXT</button></div>
+    </div>
+
+    <div class="slide" id="s6">
+        <div class="album-stack pos-tl horiz" onclick="openGallery('s6_tl')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s6_tl"></div></div></div></div>
+        <div class="album-stack pos-tr vert" onclick="openGallery('s6_tr')"><div class="frame-body f-wood"><div class="mat"><div class="photo" id="cover-s6_tr"></div></div></div></div>
+        <div class="paper-card"><p>I want you to know that I still stand to what I’ve said in the past. The promise I made is to love you no matter what, is something I carry sincerely, without expectations and please know this as well, if there ever comes a time when you need help, support, or simply someone to be there for you, I will always be here. Not to intrude, but to show up, listen, when, and if you need it.</p></div>
+        <div class="album-stack pos-bl vert" onclick="openGallery('s6_bl')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s6_bl"></div></div></div></div>
+        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ29xdGFncnJldTRlemtjazdwMjlyNG4zZWpjMW5sam9uenhvMjgzMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/LOactPJKWtNLyErSCr/giphy.gif" class="sticker pos-br">
+        <div class="nav-footer"><button class="btn btn-back" onclick="prevSlide(6)">BACK</button><button class="btn btn-next" onclick="nextSlide(6)">NEXT</button></div>
+    </div>
+
+    <div class="slide" id="s7">
+        <div class="album-stack pos-tl vert" onclick="openGallery('s7_tl')"><div class="frame-body f-wood"><div class="mat"><div class="photo" id="cover-s7_tl"></div></div></div></div>
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3dkZ3I1ejFvMWk4dXJreGN1YTh6d3d4MzR2OGpudncyYXZobHJneiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/McmG9CZ7TIlhkEIVG9/giphy.gif" class="sticker pos-tr">
+        <div class="paper-card"><p>Even in the quiet moments, there are parts of you that stay with me. The way you made things feel lighter, the warmth you brought into my life, and the sense of home I found in you. Loving you taught me patience, depth, and sincerity, and those are things I carry with me every day. No matter how time changes us, the love I have for you remains gentle, honest, and real in some way. I have faith that growth doesn’t separate people who truly matter, it prepares them.</p></div>
+        <div class="album-stack pos-bl horiz" onclick="openGallery('s7_bl')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s7_bl"></div></div></div></div>
+        <div class="album-stack pos-br vert" onclick="openGallery('s7_br')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s7_br"></div></div></div></div>
+        <div class="nav-footer"><button class="btn btn-back" onclick="prevSlide(7)">BACK</button><button class="btn btn-next" onclick="nextSlide(7)">NEXT</button></div>
+    </div>
+
+    <div class="slide" id="s8">
+        <div class="album-stack pos-tl horiz" onclick="openGallery('s8_tl')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s8_tl"></div></div></div></div>
+        <div class="album-stack pos-tr vert" onclick="openGallery('s8_tr')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s8_tr"></div></div></div></div>
+        <div class="paper-card"><p>I believe that the work we’re doing on ourselves now could one day allow us to meet again with stronger hearts, clearer intentions, and deeper love than before. I’ll be honest as well nalang din, I still hope and pray that someday our paths may find their way back to each other. Not to return to what we once had, but to build something new on a stronger foundation, slowly and without rushing, where both of us feel safe, understood, and genuinely loved.</p></div>
+        <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmJucm9tc3RpNGJrc2JjbWFqOThsdHNhZDI0dWJxYWxsZGUwcmlxZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/tKCDswORx8qr8RUXXN/giphy.gif" class="sticker pos-bl">
+        <div class="album-stack pos-br horiz" onclick="openGallery('s8_br')"><div class="frame-body f-wood"><div class="mat"><div class="photo" id="cover-s8_br"></div></div></div></div>
+        <div class="nav-footer"><button class="btn btn-back" onclick="prevSlide(8)">BACK</button><button class="btn btn-next" onclick="nextSlide(8)">NEXT</button></div>
+    </div>
+
+    <div class="slide" id="s9">
+        <div class="album-stack pos-tl vert" onclick="openGallery('s9_tl')"><div class="frame-body f-wood"><div class="mat"><div class="photo" id="cover-s9_tl"></div></div></div></div>
+        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjA3NGRvN3J2bWNjanBsdGRlcWx3NGNlcDEwN25sNTlxemdqejlmdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/kyELaYTD1Q9lYStywD/giphy.gif" class="sticker pos-tr">
+        <div class="paper-card"><p>Until that time comes, I’m willing to wait patiently, allowing us both our space to grow into the person we’re meant to be. For now, I believe it’s important that we focus on ourselves, on becoming whole and secure as a person and if the right time ever comes, I truly hope it’s still us. I’m not searching for anyone else or trying to replace what we shared. I’ve come to realize that my heart still holds a space for you, and I’m choosing that with patience rather than force.</p></div>
+        <div class="album-stack pos-bl horiz" onclick="openGallery('s9_bl')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s9_bl"></div></div></div></div>
+        <div class="album-stack pos-br vert" onclick="openGallery('s9_br')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s9_br"></div></div></div></div>
+        <div class="nav-footer"><button class="btn btn-back" onclick="prevSlide(9)">BACK</button><button class="btn btn-next" onclick="nextSlide(9)">NEXT</button></div>
+    </div>
+
+    <div class="slide" id="s10">
+        <div class="album-stack pos-tl horiz" onclick="openGallery('s10_tl')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s10_tl"></div></div></div></div>
+        <div class="album-stack pos-tr vert" onclick="openGallery('s10_tr')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s10_tr"></div></div></div></div>
+        <div class="paper-card"><p>I also want to thank you for the moments we shared and the lessons you brought into my life. I hope this year gives you peace, clarity, and happiness, whatever form that takes for you.<br><br>Take care ka always and I’ll always be here for you,<br><b> — Poy</b></p></div>
+        <div class="album-stack pos-bl vert" onclick="openGallery('s10_bl')"><div class="frame-body f-wood"><div class="mat"><div class="photo" id="cover-s10_bl"></div></div></div></div>
+        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjRydGlpeW5tZ3d0dHFmenY5YzR2dXlhMDZycGk1bGFtZmxmcnUwcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/GVaiPOkIt1I86JTMwi/giphy.gif" class="sticker pos-br">
+        <div class="nav-footer">
+            <button class="btn btn-back" onclick="prevSlide(10)">BACK</button>
+            <button class="btn btn-next" onclick="restartWrapped()">REPLAY</button>
+        </div>
+    </div>
+</div>
+
+<div id="photo-overlay">
+    <div class="close-btn" onclick="closeGallery()">✕</div>
+    <div class="gallery-container" id="gallery-touch-zone">
+        <img src="" id="side-prev" class="side-pic" onclick="changeFocus(-1)">
+        <div id="main-wrapper" style="display: flex; justify-content: center; align-items: center;">
+            <img src="" id="main-view-img" class="main-media">
+            <video id="main-view-vid" class="main-media" controls autoplay loop muted></video>
+        </div>
+        <img src="" id="side-next" class="side-pic" onclick="changeFocus(1)">
+    </div>
+</div>
+
+<script>
+    const albums = {
+        s1_tr: ['https://i.postimg.cc/8zJsy11D/IMG-6542.jpg','https://i.postimg.cc/RZ6qPMMm/IMG-6540.jpg', 'https://i.postimg.cc/HkcjSppd/IMG-6541.jpg',  'https://i.postimg.cc/Vkr57YY8/IMG-6543.jpg',],
+        s1_bl: ['https://i.postimg.cc/2yTbt8BL/IMG-6410.jpg', 'https://i.postimg.cc/KjQkWvgK/IMG-6544.jpg', 'https://i.postimg.cc/gj4X7k6x/IMG-6545.jpg', 'https://i.postimg.cc/vTXgKH6g/IMG-6546.jpg', 'https://i.postimg.cc/FzGd6sJS/IMG-6548.jpg', 'https://i.postimg.cc/d3nkftTr/IMG-6550.jpg', 'https://i.postimg.cc/8cwJYPrW/IMG-6551.jpg', 'https://i.postimg.cc/sxKQLDZ5/IMG-6552.jpg', 'https://i.postimg.cc/fWv9y5qr/IMG-6553.jpg', 'https://i.postimg.cc/PfMwJKVF/IMG-6554.jpg', 'https://i.postimg.cc/DfcX05pD/IMG-6556.jpg', 'https://i.postimg.cc/bYRtrLVW/IMG-6557.jpg', ],
+        s1_br: ['https://i.postimg.cc/rFWt0PLX/IMG-6411.jpg', 'https://i.postimg.cc/bNb2DBjX/IMG-6558.jpg', 'https://i.postimg.cc/wTJsyGdY/IMG-6559.jpg', 'https://i.postimg.cc/vH96gNwp/IMG-6560.jpg', 'https://i.postimg.cc/g2WLvHGB/IMG-6561.jpg', 'https://i.postimg.cc/pLH5DJP6/IMG-6562.jpg', 'https://i.postimg.cc/JzLHb5RF/IMG-6563.jpg', 'https://i.postimg.cc/Z5SvrxJg/IMG-6564.jpg', 'https://i.postimg.cc/Hkg8Q9pD/IMG-6565.jpg', 'https://i.postimg.cc/6pX4dfBF/IMG-6566.jpg', 'https://i.postimg.cc/htBQ91SR/IMG-6567.jpg', 'https://i.postimg.cc/8zSfhm1V/IMG-6569.jpg', 'https://i.postimg.cc/pLH5DJ2P/IMG-6570.jpg', 'https://i.postimg.cc/P5jvmQtt/IMG-6571.jpg', 'https://i.postimg.cc/pLH5DJ2W/IMG-6572.jpg',  'https://files.catbox.moe/bbtuwq.mp4', ],
+        // Next album
+        s2_tl: [ 'https://i.postimg.cc/MHnVF648/IMG-6574.jpg', 'https://i.postimg.cc/0jzDBk3R/IMG-6575.jpg', 'https://i.postimg.cc/WzdgHNKV/IMG-6576.jpg', 'https://i.postimg.cc/tJsWMqf0/IMG-6577.jpg', 'https://i.postimg.cc/8c7M0p31/IMG-6578.jpg', 'https://i.postimg.cc/D0SLMvDw/IMG-6579.jpg', 'https://i.postimg.cc/Gt4G5LN2/IMG-6580.jpg', 'https://i.postimg.cc/cCvwbxjC/IMG-6581.jpg', 'https://i.postimg.cc/QCF1y8PV/IMG-6582.jpg', 'https://i.postimg.cc/SRHCF0Fy/IMG-6583.jpg', 'https://i.postimg.cc/SRHCF0FS/IMG-6584.jpg', 'https://i.postimg.cc/1XbwhxhR/IMG-6585.jpg', 'https://i.postimg.cc/6qFnJsJ3/IMG-6586.jpg', 'https://i.postimg.cc/mkKCfxfh/IMG-6587.jpg', 'https://i.postimg.cc/br4kcXcZ/IMG-6588.jpg', 'https://i.postimg.cc/NFZmqhq9/IMG-6589.jpg', 'https://i.postimg.cc/Gt6Gw0ws/IMG-6590.jpg', 'https://files.catbox.moe/gl55la.mp4', 'https://files.catbox.moe/bn3mki.mp4', ], 
+        s2_tr: ['https://i.postimg.cc/4NZhc1fS/image-2025-12-26-031509677.png', 'https://files.catbox.moe/bhh63m.mp4', ], 
+        s2_bl: ['https://i.postimg.cc/c494J7rP/IMG-6599.jpg', 'https://i.postimg.cc/Qx4xMgHw/IMG-6600.jpg', 'https://i.postimg.cc/zXtXfwV9/IMG-6601.jpg', 'https://i.postimg.cc/KvqvY7RV/IMG-6602.jpg', 'https://i.postimg.cc/L6C6skJd/IMG-6603.jpg', 'https://i.postimg.cc/8PKPCd7Q/IMG-6604.jpg', 'https://i.postimg.cc/KvqvY71h/IMG-6605.jpg', 'https://i.postimg.cc/K81c3KMp/IMG-6607.jpg', 'https://i.postimg.cc/wj1xRtmr/IMG-6608.jpg', 'https://files.catbox.moe/niwe1e.mp4', 'https://files.catbox.moe/l2thyd.mp4',],
+                // Next album
+        s3_tl: ['https://i.postimg.cc/G2H6qYc9/IMG-6609.jpg',  'https://i.postimg.cc/RFN2XfMn/IMG-6610.jpg',  'https://i.postimg.cc/B6XRMDqK/IMG-6611.jpg', ], 
+        s3_bl: ['https://i.postimg.cc/Yq1ZntwD/IMG-6627.jpg', 'https://i.postimg.cc/xTrB3cBk/IMG-6612.jpg', 'https://i.postimg.cc/VLy2Wd25/IMG-6613.jpg', 'https://i.postimg.cc/dtMgjLgh/IMG-6614.jpg', 'https://i.postimg.cc/c4qPBrPr/IMG-6615.jpg', 'https://i.postimg.cc/Prm93dkr/IMG-6616.jpg', 'https://i.postimg.cc/qM8Sbpd7/IMG-6617.jpg', 'https://i.postimg.cc/GhkV7b1H/IMG-6618.jpg', 'https://i.postimg.cc/hP96yKqh/IMG-6619.jpg', 'https://i.postimg.cc/vHWkqGdV/IMG-6620.jpg', 'https://i.postimg.cc/Qxpw4jr5/IMG-6621.jpg', 'https://i.postimg.cc/TYrF7TXg/IMG-6622.jpg', 'https://i.postimg.cc/8Ph9KTVd/IMG-6623.jpg', 'https://i.postimg.cc/5NwT7fMm/IMG-6624.jpg', 'https://i.postimg.cc/02pFW9qZ/IMG-6625.jpg', 'https://i.postimg.cc/vHWkqGd3/IMG-6626.jpg', 'https://i.postimg.cc/TYrF7TXH/IMG-6628.jpg', 'https://i.postimg.cc/y8s522Vm/IMG-6629.jpg', 'https://i.postimg.cc/Mpq4ggW0/IMG-6630.jpg', 'https://i.postimg.cc/nhp5NNHk/IMG-6631.jpg', 'https://i.postimg.cc/XY4httVx/IMG-6632.jpg', 'https://i.postimg.cc/7Zwcjjxm/IMG-6636.jpg', 'https://i.postimg.cc/XY4httVs/IMG-6637.jpg', 'https://i.postimg.cc/K8xVCCZp/IMG-6638.jpg', 'https://i.postimg.cc/pLR73321/IMG-6639.jpg', 'https://i.postimg.cc/vZbjCCQN/IMG-6640.jpg', 'https://i.postimg.cc/fRDF11wP/IMG-6641.jpg', 'https://i.postimg.cc/pLR73327/IMG-6642.jpg', 'https://i.postimg.cc/zG8M44J6/IMG-6643.jpg', 'https://i.postimg.cc/JzMgSS19/IMG-6644.jpg', 'https://files.catbox.moe/8tdzmm.mp4', 'https://files.catbox.moe/rnao6v.mp4', 'https://files.catbox.moe/curazg.mp4',], 
+        s3_br: ['https://i.postimg.cc/cJdCdfRQ/IMG-6648.jpg', 'https://i.postimg.cc/wBFvM32M/IMG-6649.jpg', 'https://i.postimg.cc/MGtTHX5v/IMG-6652.jpg', 'https://i.postimg.cc/KYmjmtPt/IMG-6653.jpg', 'https://i.postimg.cc/d0n13D68/IMG-6654.jpg', 'https://i.postimg.cc/pdkTryCK/IMG-6655.jpg', 'https://files.catbox.moe/5yf8ls.mp4', 'https://files.catbox.moe/7e9a2g.mp4',],
+                // Next album
+        s4_tl: ['https://i.postimg.cc/pXdgMrhw/IMG-6664.jpg', 'https://i.postimg.cc/QxMRZC9R/IMG-6665.jpg', 'https://i.postimg.cc/VLN3Pv0Q/IMG-6666.jpg', 'https://i.postimg.cc/c4JVGCtq/IMG-6667.jpg', 'https://i.postimg.cc/gk0fbjLc/IMG-6668.jpg', 'https://i.postimg.cc/wTBSYMRq/IMG-6669.jpg', 'https://i.postimg.cc/MKGhJHfW/IMG-6670.jpg', 'https://i.postimg.cc/VLN3Pv0L/IMG-6671.jpg', 'https://i.postimg.cc/3JwPQN0d/IMG-6672.jpg', 'https://i.postimg.cc/kXhLJCWC/IMG-6673.jpg',], 
+        s4_tr: ['https://i.postimg.cc/NfLPPnZh/IMG-6660.jpg', 'https://i.postimg.cc/4NnFF0qM/IMG-0108.jpg', 'https://i.postimg.cc/J4tddFvF/IMG-6656.jpg', 'https://i.postimg.cc/7YbQQRdd/IMG-6657.jpg', 'https://i.postimg.cc/CLd662XW/IMG-6659.jpg', 'https://i.postimg.cc/DymYYNRk/IMG-6661.jpg', 'https://i.postimg.cc/c4655zPG/IMG-6662.jpg', 'https://i.postimg.cc/zX3PPQ41/IMG-6663.jpg',], 
+        s4_br: ['https://i.postimg.cc/NjmD3vDh/IMG-6674.jpg', 'https://i.postimg.cc/cLwhpGmP/IMG-6675.jpg', 'https://i.postimg.cc/bwkg7fTM/IMG-6676.jpg', 'https://i.postimg.cc/rwxjB2JB/IMG-6677.jpg',],
+        // Next album
+        s5_tr: ['https://i.postimg.cc/0jhG4VJk/IMG-6678.jpg', 'https://i.postimg.cc/90sPkLqF/IMG-6679.jpg', 'https://i.postimg.cc/pr3QSsnV/IMG-6680.jpg', 'https://i.postimg.cc/Vv29hKbk/IMG-6681.jpg', 'https://i.postimg.cc/pr3QSsnF/IMG-6682.jpg', 'https://i.postimg.cc/hvN8Y27x/IMG-6683.jpg', 'https://i.postimg.cc/90sPkLqZ/IMG-6684.jpg', 'https://i.postimg.cc/mkK3nmF7/IMG-6685.jpg', 'https://i.postimg.cc/jq1hCS3p/IMG-6686.jpg', 'https://i.postimg.cc/y6GTW8rq/IMG-6696.jpg', 'https://i.postimg.cc/ZYQL05sg/IMG-6697.jpg', 'https://i.postimg.cc/HWNtjkPD/IMG-6698.jpg', 'https://i.postimg.cc/ZYQL05DK/IMG-6699.jpg', 'https://i.postimg.cc/sfLJ1g01/IMG-6700.jpg', 'https://i.postimg.cc/VshF5kH6/IMG-6701.jpg', 'https://i.postimg.cc/HWNtjkPn/IMG-6702.jpg',], 
+        s5_bl: ['https://i.postimg.cc/fThfYrZ5/IMG-6687.jpg', 'https://i.postimg.cc/NfwkRzYd/IMG-6687(1).jpg', 'https://i.postimg.cc/3JHF2c7Z/IMG-6690.jpg', 'https://i.postimg.cc/CLVsbQYm/IMG-6691.jpg', 'https://i.postimg.cc/dtKjGxvX/IMG-6692.jpg', 'https://i.postimg.cc/vHdt5NMk/IMG-6693.jpg', 'https://i.postimg.cc/dtKjGxvg/IMG-6703.jpg', 'https://i.postimg.cc/sDR45NyN/IMG-6704.jpg', 'https://i.postimg.cc/PrkQ1RTk/IMG-6705.jpg', 'https://i.postimg.cc/TYXJn4f6/IMG-6706.jpg', 'https://i.postimg.cc/ZKFFHxKM/IMG-6707.jpg', 'https://i.postimg.cc/Gh1xv5dr/IMG-6708.jpg', 'https://i.postimg.cc/pXYYCJX4/IMG-6709.jpg', 'https://files.catbox.moe/g6fl3a.mp4',], 
+        s5_br: ['https://i.postimg.cc/44v9RNk2/IMG-6713.jpg', 'https://i.postimg.cc/NG8HvfqJ/IMG-6710.jpg', 'https://i.postimg.cc/Pfbwnrs7/IMG-6711.jpg', 'https://i.postimg.cc/qBc3HMVZ/IMG-6712.jpg', 'https://i.postimg.cc/G3PynhwZ/IMG-6714.jpg', 'https://i.postimg.cc/pVQFMXb3/IMG-6715.jpg',],
+        // Next album
+        s6_tl: ['https://i.postimg.cc/zfWfw0qL/IMG-6717.jpg', 'https://i.postimg.cc/mgKDF0Wy/IMG-6718.jpg', 'https://files.catbox.moe/sk7kuf.mp4', 'https://files.catbox.moe/sk7kuf.mp4', 'https://files.catbox.moe/8j25ov.mp4',], 
+        s6_tr: ['https://i.postimg.cc/Vs7zC3js/IMG-6727.jpg', 'https://i.postimg.cc/448X9rzx/IMG-6724.jpg', 'https://i.postimg.cc/8kyT6qh5/IMG-6725.jpg', 'https://i.postimg.cc/CMvwqWjh/IMG-6726.jpg', 'https://i.postimg.cc/66HBvDd4/IMG-6728.jpg', 'https://i.postimg.cc/rFKMCQJV/IMG-6729.jpg', 'https://i.postimg.cc/65ytLY09/IMG-6730.jpg',], 
+        s6_bl: ['https://i.postimg.cc/NMJZKvZN/IMG-6731.jpg', 'https://i.postimg.cc/wvfn1Ynf/IMG-6732.jpg', 'https://i.postimg.cc/wvfn1Ynw/IMG-6733.jpg',],
+        // Next album
+        s7_tl: ['https://i.postimg.cc/bvLB5jYs/IMG-6736.jpg', 'https://i.postimg.cc/s2KNLRfB/IMG-6734.jpg', 'https://i.postimg.cc/YS8sPw2j/IMG-6735.jpg', 'https://i.postimg.cc/q7Q5FdBN/IMG-6737.jpg',], 
+        s7_bl: ['https://i.postimg.cc/3xZh3VJ3/IMG-6738.jpg', 'https://i.postimg.cc/6phKBg59/IMG-6739.jpg', 'https://i.postimg.cc/0yCv9F2k/IMG-6740.jpg', 'https://i.postimg.cc/HktmTRsm/IMG-6741.jpg', 'https://i.postimg.cc/W4bvz8hP/IMG-6742.jpg', 'https://i.postimg.cc/vmHsThcM/IMG-6743.jpg', 'https://i.postimg.cc/HLsgnzVd/IMG-6744.jpg', 'https://i.postimg.cc/258DyGVz/IMG-6745.jpg',], 
+        s7_br: ['https://i.postimg.cc/KvPS5wTy/IMG-6746.jpg', 'https://i.postimg.cc/m2YfSJ94/IMG-6747.jpg', 'https://i.postimg.cc/3JX5ZVGT/IMG-6748.jpg',],
+        // Next album
+        s8_tl: ['https://i.postimg.cc/SKtwsh00/IMG-6750.jpg', 'https://i.postimg.cc/43FrdgCk/IMG-6749.jpg', 'https://i.postimg.cc/bvFKJhXj/IMG-6751.jpg', 'https://i.postimg.cc/Ls0rXMcc/IMG-6752.jpg', 'https://i.postimg.cc/0NHLQsg9/IMG-6753.jpg', 'https://i.postimg.cc/W3FxqHVC/IMG-6754.jpg',], 
+        s8_br: ['https://i.postimg.cc/CKtQ0s8r/IMG-6759.jpg', 'https://i.postimg.cc/FKqBvVSx/IMG-4690.jpg', 'https://i.postimg.cc/q7Y5rxKF/IMG-6760.jpg', 'https://i.postimg.cc/9fSn2Y9v/IMG-6761.jpg', 'https://i.postimg.cc/tgfMbNPQ/IMG-6762.jpg', 'https://i.postimg.cc/VNTVwWMy/IMG-6763.jpg', 'https://i.postimg.cc/9fSn2YT2/IMG-6764.jpg', 'https://i.postimg.cc/9fSn2YTF/IMG-6765.jpg', 'https://i.postimg.cc/PqcRHQZt/IMG-6766.jpg', 'https://i.postimg.cc/N0VztkTj/IMG-6767.jpg', 'https://i.postimg.cc/PqcRHQZx/IMG-6768.jpg', 'https://i.postimg.cc/W3kf1q6j/IMG-6769.jpg', 'https://i.postimg.cc/SsMtxY7k/IMG-6770.jpg', 'https://i.postimg.cc/26ZXSLFC/IMG-6771.jpg', 'https://i.postimg.cc/mDH6g1NZ/IMG-6772.jpg', 'https://i.postimg.cc/856nzfBj/IMG-6773.jpg', 'https://i.postimg.cc/mDH6g1Nz/IMG-6774.jpg', 'https://i.postimg.cc/ydZr83X3/IMG-6775.jpg', 'https://i.postimg.cc/HxyPk84M/IMG-6777.jpg', 'https://i.postimg.cc/856nzfBd/IMG-6778.jpg', 'https://i.postimg.cc/xCzF1Nyy/IMG-6780.jpg', 'https://i.postimg.cc/4d9FxHbQ/IMG-6785.jpg', 'https://i.postimg.cc/KjhpkcJM/IMG-6786.jpg', 'https://i.postimg.cc/T1vNL2Cr/IMG-6787.jpg', 'https://i.postimg.cc/zvY2bD0S/IMG-6788.jpg', 'https://i.postimg.cc/Rhxp6CXR/IMG-6789.jpg', 'https://i.postimg.cc/WzcYFpXX/IMG-6790.jpg', 'https://i.postimg.cc/vTw2g83P/IMG-6791.jpg', 'https://i.postimg.cc/5yWKY9nR/IMG-6792.jpg', 'https://i.postimg.cc/Gtng83qZ/IMG-6824.jpg', 'https://i.postimg.cc/d3cNkQ5c/IMG-6825.jpg', 'https://i.postimg.cc/Hn0ZQGhS/IMG-6826.jpg', 'https://i.postimg.cc/D0QjqVMD/IMG-6827.jpg', 'https://i.postimg.cc/br0CQXBK/IMG-6828.jpg', 'https://i.postimg.cc/d3RH8Mxb/IMG-6829.jpg', 'https://i.postimg.cc/XqKHwMP6/IMG-6830.jpg', 'https://i.postimg.cc/3NjSgMqY/IMG-6831.jpg', 'https://i.postimg.cc/L5kCzdW9/IMG-6832.jpg', 'https://i.postimg.cc/zvwtnmQD/IMG-6833.jpg', 'https://i.postimg.cc/Kj7qnXWv/IMG-6837.jpg', 'https://i.postimg.cc/44pSCtxb/IMG-6838.jpg', 'https://i.postimg.cc/zDTcmWGw/IMG-6839.jpg', 'https://files.catbox.moe/grl0vv.mp4',], 
+        s8_tr: ['https://i.postimg.cc/8CFZZfYm/IMG-6834.jpg', 'https://i.postimg.cc/W4D55qyS/IMG-6835.jpg', 'https://i.postimg.cc/6Q7MM4Pc/IMG-6836.jpg',],
+        // Next album  
+        s9_tl: ['https://i.postimg.cc/K817bS5Z/att-3toy-NTy7but85Ws-XHhsps-MZn5Hs-Ys3L6PLGU49wh4k-Q.jpg'], 
+        s9_bl: ['https://i.postimg.cc/J7Q5cQnW/IMG-6755.jpg', 'https://i.postimg.cc/Kc5Dr5z2/IMG-6756.jpg', 'https://i.postimg.cc/XNgkcgJJ/IMG-6757.jpg', 'https://i.postimg.cc/66hfLh35/IMG-6758.jpg',], 
+        s9_br: ['https://i.postimg.cc/j2kW32mh/IMG-6784.jpg', 'https://i.postimg.cc/5ykHKyTw/IMG-6781.jpg', 'https://i.postimg.cc/5ykHKyTS/IMG-6783.jpg',],
+        // Next album
+        s10_tl: ['https://i.postimg.cc/V6fdYXc3/IMG-6794.jpg', 'https://i.postimg.cc/yd1kV0zj/IMG-2599.jpg', 'https://i.postimg.cc/bJysz1jF/IMG-6793.jpg', 'https://i.postimg.cc/MT6vW18N/IMG-6795.jpg', 'https://i.postimg.cc/sXT111V0/IMG-6796.jpg', 'https://i.postimg.cc/wvw3336P/IMG-6798.jpg', 'https://i.postimg.cc/XJsXXXVR/IMG-6799.jpg',], 
+        s10_tr: ['https://i.postimg.cc/t4dqY7DQ/IMG-4688.jpg', 'https://i.postimg.cc/P5bXPNKk/IMG-4689.jpg', 'https://i.postimg.cc/Mp06vXtx/IMG-6804.jpg', 'https://i.postimg.cc/mg3LthV4/IMG-6804(1).jpg', 'https://i.postimg.cc/s2VVSyHk/IMG-6805.jpg', 'https://i.postimg.cc/vmQQ9MSG/IMG-6806.jpg', 'https://i.postimg.cc/mrbbMR6g/IMG-6808.jpg', 'https://i.postimg.cc/N0ggTYPf/IMG-6809.jpg', 'https://i.postimg.cc/vmQQ9MS1/IMG-6810.jpg', 'https://i.postimg.cc/9fWWTVNR/IMG-6811.jpg', 'https://i.postimg.cc/QMXX5snW/IMG-6812.jpg', 'https://i.postimg.cc/BvqqDswF/IMG-6813.jpg', 'https://i.postimg.cc/QM0jJPRd/IMG-6815.jpg', 'https://i.postimg.cc/fbBMfF6L/IMG-6816.jpg', 'https://i.postimg.cc/wB09QPSM/IMG-6817.jpg', 'https://i.postimg.cc/MGdzm4hX/IMG-6818.jpg', 'https://i.postimg.cc/k5f7vZkV/IMG-6819.jpg', 'https://i.postimg.cc/VNDzWT3r/IMG-6821.jpg', 'https://i.postimg.cc/LsNm37rg/IMG-6822.jpg', 'https://i.postimg.cc/fbBMfF69/IMG-6823.jpg',], 
+        s10_bl: ['https://i.postimg.cc/3wJkhghD/IMG-6800.jpg', 'https://i.postimg.cc/QMxFDpDT/IMG-6801.jpg', 'https://i.postimg.cc/s2DMzpzQ/IMG-6802.jpg', 'https://i.postimg.cc/q7MNr8r6/IMG-6803.jpg',]
+    };
+
+    const canvas = document.getElementById('canvas-fw'), ctx = canvas.getContext('2d');
+    const mainImg = document.getElementById('main-view-img'), mainVid = document.getElementById('main-view-vid');
+    let fireworks = [], currentGallery = [], currentIndex = 0;
+
+    // Responsive frame resizing logic
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    function updateCovers() {
+        Object.keys(albums).forEach(key => {
+            const el = document.getElementById('cover-' + key);
+            if (el && albums[key].length > 0) el.style.backgroundImage = `url('${albums[key][0]}')`;
+        });
+    }
+    updateCovers();
+
+    function openEnvelope() {
+        document.getElementById('env-wrap').classList.add('open-env');
+        document.getElementById('bg-music').play().catch(() => {});
+        setTimeout(() => document.getElementById('env-wrap').classList.add('open-env-final'), 800);
+        setTimeout(() => {
+            document.getElementById('envelope-stage').style.display = 'none';
+            document.getElementById('wrapped-stage').style.display = 'block';
+            document.getElementById('prog-container').style.display = 'flex';
+            updateProgress(1);
+        }, 1600);
+    }
+function nextSlide(n) {
+    const current = document.getElementById(`s${n}`);
+    const next = document.getElementById(`s${n+1}`);
+    
+    if (n === 1) current.classList.remove('first-run');
+
+    current.classList.remove('active');
+    next.classList.add('active');
+    
+    updateProgress(n + 1);
+}
+
+function prevSlide(n) {
+    const current = document.getElementById(`s${n}`);
+    const prev = document.getElementById(`s${n-1}`);
+
+    current.classList.remove('active');
+    prev.classList.add('active');
+    
+    updateProgress(n - 1);
+}
+
+function restartWrapped() {
+    const current = document.getElementById('s10');
+    const first = document.getElementById('s1');
+
+    current.classList.remove('active');
+    first.classList.add('active');
+    
+    updateProgress(1);
+}
+
+function updateProgress(num) { 
+    for(let i=1; i<=10; i++) {
+        const fill = document.getElementById(`fill-${i}`);
+        if(fill) fill.style.width = i <= num ? "100%" : "0%";
+    }
+}
+
+
+// 
+        function openGallery(key) { 
+        if (!albums[key]) return; 
+        currentGallery = albums[key]; currentIndex = 0; 
+        updateGalleryDisplay(); 
+        document.getElementById('photo-overlay').style.display = 'flex'; 
+    }
+    
+    function updateGalleryDisplay() {
+        const url = currentGallery[currentIndex];
+        const isVid = url.toLowerCase().match(/\.(mp4|mov|webm)$/);
+        mainImg.style.display = isVid ? 'none' : 'block';
+        mainVid.style.display = isVid ? 'block' : 'none';
+        if(isVid) { mainVid.src = url; mainVid.play(); } else { mainImg.src = url; }
+        
+        if (window.innerWidth > 768 && currentGallery.length > 1) {
+            document.getElementById('side-prev').style.display = 'block';
+            document.getElementById('side-next').style.display = 'block';
+            document.getElementById('side-prev').src = currentGallery[(currentIndex - 1 + currentGallery.length) % currentGallery.length];
+            document.getElementById('side-next').src = currentGallery[(currentIndex + 1) % currentGallery.length];
+        } else {
+            document.getElementById('side-prev').style.display = 'none';
+            document.getElementById('side-next').style.display = 'none';
+        }
+    }
+    
+    function changeFocus(s) { currentIndex = (currentIndex + s + currentGallery.length) % currentGallery.length; updateGalleryDisplay(); }
+    function closeGallery() { document.getElementById('photo-overlay').style.display = 'none'; mainVid.pause(); mainVid.src = ""; }
+
+    // Swipe Functionality
+    let touchstartX = 0;
+    let touchendX = 0;
+    const galleryZone = document.getElementById('gallery-touch-zone');
+
+    galleryZone.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, false);
+    galleryZone.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        if (touchendX < touchstartX - 50) changeFocus(1); // Swipe left
+        if (touchendX > touchstartX + 50) changeFocus(-1); // Swipe right
+    }, false);
+
+
+// Particle/Firework Logic
+    let frameCount = 0; 
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x; this.y = y; this.color = color;
+            // Increased from 8 to 12 for a wider initial blast
+            this.velocity = { 
+                x: (Math.random() - 0.5) * 12, 
+                y: (Math.random() - 0.5) * 12 
+            };
+            this.alpha = 1; 
+            // Increased from 0.95 to 0.97 so they glide further before stopping
+            this.friction = 0.97; 
+        }
+        draw() { 
+            if (this.alpha < 0.1) return; 
+            ctx.save(); 
+            ctx.globalAlpha = this.alpha; 
+            ctx.beginPath(); 
+            ctx.arc(this.x, this.y, 3, 0, Math.PI * 2); 
+            ctx.fillStyle = this.color; 
+            ctx.fill(); 
+            ctx.restore(); 
+        }
+        update() { 
+            this.velocity.x *= this.friction; 
+            this.velocity.y *= this.friction; 
+            this.x += this.velocity.x; 
+            this.y += this.velocity.y; 
+            // Decreased from 0.015 to 0.012 to make them stay visible longer
+            this.alpha -= 0.012; 
+        }
+    }
+
+    function createFirework() {
+        const x = Math.random() * canvas.width, y = Math.random() * (canvas.height * 0.5);
+        const color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        // Optional: increased particle count to 40 for a fuller look
+        for (let i = 0; i < 40; i++) fireworks.push(new Particle(x, y, color));
+    }
+
+    function animate() { 
+        frameCount++;
+        if (frameCount % 60 === 0) {
+            ctx.fillStyle = 'rgb(0,0,0)'; 
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+        } else {
+            ctx.fillStyle = 'rgba(0,0,0,0.2)'; 
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+        }
+
+        fireworks.forEach((fw, i) => { 
+            if(fw.alpha <= 0.1) {
+                fireworks.splice(i, 1); 
+            } else { 
+                fw.update(); 
+                fw.draw(); 
+            } 
+        }); 
+        requestAnimationFrame(animate); 
+    }
+    
+    animate(); 
+    setInterval(createFirework, 1000); // Slightly longer gap between launches to enjoy the linger
+    
+    // Embers
+    const emberLayer = document.getElementById('embers-layer');
+    for (let i = 0; i < 100; i++) {
+        const ember = document.createElement('div');
+        ember.className = 'ember';
+        ember.style.left = Math.random() * 100 + 'vw';
+        ember.style.top = Math.random() * 100 + 'vh';
+        ember.style.setProperty('--duration', (Math.random() * 8 + 4) + 's');
+        emberLayer.appendChild(ember);
+    }
+
+    window.onload = () => { 
+        setTimeout(() => { 
+            document.getElementById('intro-stage').style.opacity = '0'; 
+            setTimeout(() => { 
+                document.getElementById('intro-stage').style.display = 'none'; 
+                document.getElementById('envelope-stage').style.display = 'flex'; 
+                setTimeout(() => document.getElementById('envelope-stage').style.opacity = '1', 50); 
+            }, 1000); 
+        }, 3000); 
+    };
+</script>
+</body>
+</html>
