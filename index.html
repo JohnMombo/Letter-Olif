@@ -44,6 +44,99 @@
             50% { opacity: 0.6; }
             100% { transform: translateY(-10vh) translateX(60px); opacity: 0; }
         }
+
+        /* Gallery hints for the first slide */
+.gallery-hint {
+    position: absolute;
+    font-size: 0.6rem; /* Slightly smaller */
+    color: var(--gold);
+    letter-spacing: 1.2px;
+    font-weight: 500;
+    text-transform: uppercase;
+    pointer-events: none;
+    animation: hintPulse 3s infinite ease-in-out; /* Slower, gentler pulse */
+    white-space: nowrap;
+    z-index: 65;
+    
+    /* Centering logic */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* Making it less clear/more transparent */
+    opacity: 0.5; 
+}
+
+@keyframes hintPulse {
+    0%, 100% { opacity: 0.2; } /* Very faint */
+    50% { opacity: 0.5; }      /* Peak visibility is still subtle */
+}
+
+/* Positioning hints above or below the frame */
+.hint-tr { top: -25px; } 
+.hint-bl { bottom: -25px; }
+.hint-br { bottom: -25px; }
+
+
+/* Instruction hints inside the gallery overlay */
+.gallery-instruction {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: white;
+    letter-spacing: 1px;
+    pointer-events: none;
+    z-index: 3001;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeInOut 3s infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Tooltip for the side-click area on desktop */
+/* Side hints styling */
+.side-hint {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.4); 
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 3005;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    width: 60px;
+    text-align: center;
+}
+
+.hint-left { 
+    left: 10px; 
+    writing-mode: vertical-rl; 
+    transform: translateY(-50%) rotate(180deg); 
+}
+
+.hint-right { 
+    right: 10px; 
+    writing-mode: vertical-rl; 
+}
+
+/* Force show on mobile */
+@media (max-width: 768px) {
+    .side-hint {
+        display: block !important;
+        font-size: 0.55rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+}
+
 /* This ensures the background is visible immediately */
 #s1.active {
     display: flex;
@@ -214,13 +307,26 @@
 
 <div id="wrapped-stage">
     <div class="slide active first-run" id="s1">
-        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnQ0bzhyN2JvYXhmY3NmOHFkZGVwdHN2YmV4cWcxcnZiY2pjaWZ1cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9J8L7rMT4VHNcOOQQG/giphy.gif" class="sticker pos-tl">
-        <div class="album-stack pos-tr vert" onclick="openGallery('s1_tr')"><div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s1_tr"></div></div></div></div>
-        <div class="paper-card"><p>Hi Keira,<br><br>Happy New Year po! I truly hope this year has started gently for you and that you’ve been doing well. I hope you were able to rest, relax, and really enjoy your vacation po. I’ve been thinking about you a lot, and I just wanted to check in through this letter, not to demand anything, but simply to speak honestly with this letter.</p></div>
-        <div class="album-stack pos-bl horiz" onclick="openGallery('s1_bl')"><div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s1_bl"></div></div></div></div>
-        <div class="album-stack pos-br vert" onclick="openGallery('s1_br')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s1_br"></div></div></div></div>
-        <div class="nav-footer"><button class="btn btn-next" onclick="nextSlide(1)">CONTINUE</button></div>
+    <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnQ0bzhyN2JvYXhmY3NmOHFkZGVwdHN2YmV4cWcxcnZiY2pjaWZ1cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9J8L7rMT4VHNcOOQQG/giphy.gif" class="sticker pos-tl">
+    
+    <div class="album-stack pos-tr vert" onclick="openGallery('s1_tr')">
+        <span class="gallery-hint hint-tr">Click to open</span>
+        <div class="frame-body f-gold"><div class="mat"><div class="photo" id="cover-s1_tr"></div></div></div>
     </div>
+
+    <div class="paper-card">
+        <p>Hi Keira,<br><br>Happy New Year po! I truly hope this year has started gently for you and that you’ve been doing well. I hope you were able to rest, relax, and really enjoy your vacation po. I’ve been thinking about you a lot, and I just wanted to check in through this letter, not to demand anything, but simply to speak honestly with this letter.</p>
+    </div>
+    <div class="album-stack pos-bl horiz" onclick="openGallery('s1_bl')">
+        <div class="frame-body f-silver"><div class="mat"><div class="photo" id="cover-s1_bl"></div></div></div>
+    </div>
+
+    <div class="album-stack pos-br vert" onclick="openGallery('s1_br')">
+        <div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s1_br"></div></div></div>
+    </div>
+
+    <div class="nav-footer"><button class="btn btn-next" onclick="nextSlide(1)">CONTINUE</button></div>
+</div>
 
     <div class="slide" id="s2">
         <div class="album-stack pos-tl horiz" onclick="openGallery('s2_tl')"><div class="frame-body f-rose"><div class="mat"><div class="photo" id="cover-s2_tl"></div></div></div></div>
@@ -309,6 +415,7 @@
 
 <div id="photo-overlay">
     <div class="close-btn" onclick="closeGallery()">✕</div>
+    
     <div class="gallery-container" id="gallery-touch-zone">
         <img src="" id="side-prev" class="side-pic" onclick="changeFocus(-1)">
         <div id="main-wrapper" style="display: flex; justify-content: center; align-items: center;">
@@ -317,13 +424,17 @@
         </div>
         <img src="" id="side-next" class="side-pic" onclick="changeFocus(1)">
     </div>
+
+    <div class="side-hint hint-left">Swipe left or Click to go back</div>
+    <div class="side-hint hint-right">Swipe right or Click to go next</div>
 </div>
 
 <script>
+    let hasMovedInGallery = false;
     const albums = {
         s1_tr: ['https://i.postimg.cc/8zJsy11D/IMG-6542.jpg','https://i.postimg.cc/RZ6qPMMm/IMG-6540.jpg', 'https://i.postimg.cc/HkcjSppd/IMG-6541.jpg',  'https://i.postimg.cc/Vkr57YY8/IMG-6543.jpg',],
         s1_bl: ['https://i.postimg.cc/2yTbt8BL/IMG-6410.jpg', 'https://i.postimg.cc/KjQkWvgK/IMG-6544.jpg', 'https://i.postimg.cc/gj4X7k6x/IMG-6545.jpg', 'https://i.postimg.cc/vTXgKH6g/IMG-6546.jpg', 'https://i.postimg.cc/FzGd6sJS/IMG-6548.jpg', 'https://i.postimg.cc/d3nkftTr/IMG-6550.jpg', 'https://i.postimg.cc/8cwJYPrW/IMG-6551.jpg', 'https://i.postimg.cc/sxKQLDZ5/IMG-6552.jpg', 'https://i.postimg.cc/fWv9y5qr/IMG-6553.jpg', 'https://i.postimg.cc/PfMwJKVF/IMG-6554.jpg', 'https://i.postimg.cc/DfcX05pD/IMG-6556.jpg', 'https://i.postimg.cc/bYRtrLVW/IMG-6557.jpg', ],
-        s1_br: ['https://i.postimg.cc/rFWt0PLX/IMG-6411.jpg', 'https://i.postimg.cc/bNb2DBjX/IMG-6558.jpg', 'https://i.postimg.cc/wTJsyGdY/IMG-6559.jpg', 'https://i.postimg.cc/vH96gNwp/IMG-6560.jpg', 'https://i.postimg.cc/g2WLvHGB/IMG-6561.jpg', 'https://i.postimg.cc/pLH5DJP6/IMG-6562.jpg', 'https://i.postimg.cc/JzLHb5RF/IMG-6563.jpg', 'https://i.postimg.cc/Z5SvrxJg/IMG-6564.jpg', 'https://i.postimg.cc/Hkg8Q9pD/IMG-6565.jpg', 'https://i.postimg.cc/6pX4dfBF/IMG-6566.jpg', 'https://i.postimg.cc/htBQ91SR/IMG-6567.jpg', 'https://i.postimg.cc/8zSfhm1V/IMG-6569.jpg', 'https://i.postimg.cc/pLH5DJ2P/IMG-6570.jpg', 'https://i.postimg.cc/P5jvmQtt/IMG-6571.jpg', 'https://i.postimg.cc/pLH5DJ2W/IMG-6572.jpg',  'Album-3-video.mp4', ],
+        s1_br: ['https://i.postimg.cc/rFWt0PLX/IMG-6411.jpg', 'https://i.postimg.cc/bNb2DBjX/IMG-6558.jpg', 'https://i.postimg.cc/wTJsyGdY/IMG-6559.jpg', 'https://i.postimg.cc/vH96gNwp/IMG-6560.jpg', 'https://i.postimg.cc/g2WLvHGB/IMG-6561.jpg', 'https://i.postimg.cc/pLH5DJP6/IMG-6562.jpg', 'https://i.postimg.cc/JzLHb5RF/IMG-6563.jpg', 'https://i.postimg.cc/Z5SvrxJg/IMG-6564.jpg', 'https://i.postimg.cc/Hkg8Q9pD/IMG-6565.jpg', 'https://i.postimg.cc/6pX4dfBF/IMG-6566.jpg', 'https://i.postimg.cc/htBQ91SR/IMG-6567.jpg', 'https://i.postimg.cc/8zSfhm1V/IMG-6569.jpg', 'https://i.postimg.cc/pLH5DJ2P/IMG-6570.jpg', 'https://i.postimg.cc/P5jvmQtt/IMG-6571.jpg', 'https://i.postimg.cc/pLH5DJ2W/IMG-6572.jpg',  'album-3-video.mp4', ],
         // Next album
         s2_tl: [ 'https://i.postimg.cc/MHnVF648/IMG-6574.jpg', 'https://i.postimg.cc/0jzDBk3R/IMG-6575.jpg', 'https://i.postimg.cc/WzdgHNKV/IMG-6576.jpg', 'https://i.postimg.cc/tJsWMqf0/IMG-6577.jpg', 'https://i.postimg.cc/8c7M0p31/IMG-6578.jpg', 'https://i.postimg.cc/D0SLMvDw/IMG-6579.jpg', 'https://i.postimg.cc/Gt4G5LN2/IMG-6580.jpg', 'https://i.postimg.cc/cCvwbxjC/IMG-6581.jpg', 'https://i.postimg.cc/QCF1y8PV/IMG-6582.jpg', 'https://i.postimg.cc/SRHCF0Fy/IMG-6583.jpg', 'https://i.postimg.cc/SRHCF0FS/IMG-6584.jpg', 'https://i.postimg.cc/1XbwhxhR/IMG-6585.jpg', 'https://i.postimg.cc/6qFnJsJ3/IMG-6586.jpg', 'https://i.postimg.cc/mkKCfxfh/IMG-6587.jpg', 'https://i.postimg.cc/br4kcXcZ/IMG-6588.jpg', 'https://i.postimg.cc/NFZmqhq9/IMG-6589.jpg', 'https://i.postimg.cc/Gt6Gw0ws/IMG-6590.jpg', 'Album-4-video-1.mp4', 'Album-4-video-2.mp4', ], 
         s2_tr: ['https://i.postimg.cc/4NZhc1fS/image-2025-12-26-031509677.png', 'Album 5 video.mp4', ], 
@@ -440,12 +551,21 @@ function updateProgress(num) {
 
 
 // 
-        function openGallery(key) { 
-        if (!albums[key]) return; 
-        currentGallery = albums[key]; currentIndex = 0; 
-        updateGalleryDisplay(); 
-        document.getElementById('photo-overlay').style.display = 'flex'; 
-    }
+        function openGallery(key) {
+    if (!albums[key]) return;
+    currentGallery = albums[key];
+    currentIndex = 0;
+    
+    // Reset hints to visible every time a new album opens
+    hasMovedInGallery = false;
+    document.querySelectorAll('.side-hint').forEach(h => {
+        h.style.opacity = '1';
+        h.style.display = 'block';
+    });
+
+    updateGalleryDisplay();
+    document.getElementById('photo-overlay').style.display = 'flex';
+}
     
     function updateGalleryDisplay() {
         const url = currentGallery[currentIndex];
@@ -465,7 +585,21 @@ function updateProgress(num) {
         }
     }
     
-    function changeFocus(s) { currentIndex = (currentIndex + s + currentGallery.length) % currentGallery.length; updateGalleryDisplay(); }
+    function changeFocus(dir) {
+    currentIndex += dir;
+    if (currentIndex < 0) currentIndex = currentGallery.length - 1;
+    if (currentIndex >= currentGallery.length) currentIndex = 0;
+    
+    // Hide hints permanently for this session once user moves
+    if (!hasMovedInGallery) {
+        document.querySelectorAll('.side-hint').forEach(h => {
+            h.style.opacity = '0';
+        });
+        hasMovedInGallery = true;
+    }
+
+    updateGalleryDisplay();
+}
     function closeGallery() { document.getElementById('photo-overlay').style.display = 'none'; mainVid.pause(); mainVid.src = ""; }
 
     // Swipe Functionality
@@ -569,5 +703,4 @@ function updateProgress(num) {
     };
 </script>
 </body>
-
 </html>
